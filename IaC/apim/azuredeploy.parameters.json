@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "apis_csqa_questions_path": {
+            "value": null
+        },
+        "operations_delete_deletequestion_type": {
+            "value": null
+        },
+        "operations_get_getquestionbyid_type": {
+            "value": null
+        },
+        "operations_put_updatequestion_type": {
+            "value": null
+        },
+        "namedValues_5e8fff4c05f039116ca50d66_value": {
+            "value": null
+        },
+        "namedValues_csqazrirpiggjdc4w_questions_key_value": {
+            "value": null
+        },
+        "subscriptions_5e8ff710c2dc550040070001_displayName": {
+            "value": null
+        },
+        "subscriptions_5e8ff711c2dc550040070002_displayName": {
+            "value": null
+        },
+        "users_1_lastName": {
+            "value": null
+        },
+        "service_csQA_name": {
+            "value": null
+        },
+        "components_csQAzrirpiggjdc4w_ai_externalid": {
+            "value": null
+        }
+    }
+}
