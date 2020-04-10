@@ -5,6 +5,9 @@
     "appName": {
       "value": "csQA"
     },
+    "storageAccountType": {
+      "value": "Standard_LRS"
+    },
     "cosmosDatabaseName": {
       "value": "csQA"
     },
