@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appName": {
+      "value": "csQA"
+    },
+    "storageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "cosmosDatabaseName": {
+      "value": "csQA"
+    },
+    "cosmosDatabaseCollection": {
+      "value": "questions"
+    },
+    "cosmosCollectionPartitionKey": {
+      "value": "/id"
+    },
+    "cosmosDatabaseSharedThroughput": {
+      "value": 400
+    },
+    "defaultConsistencyLevel": {
+      "value": "Session"
+    },
+    "multipleWriteLocations": {
+      "value": false
+    },
+    "automaticFailover": {
+      "value": false
+    }
+  }
+}
