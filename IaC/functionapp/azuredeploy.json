@@ -115,12 +115,12 @@
     }
   },
   "variables": {
-    "questionsStorageAccountName": "[toLower(concat(parameters('appName'),uniqueString(resourceGroup().id)))]",
+    "questionsStorageAccountName": "[toLower(concat(parameters('appName'),'-st'))]",
     "hostingPlanName": "[parameters('appName')]",
-    "questionsFunctionAppName": "[concat(parameters('appName'),uniqueString(resourceGroup().id),'-questions')]",
+    "questionsFunctionAppName": "[concat(parameters('appName'),'-questions')]",
     "questionsStorageAccountId": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('questionsStorageAccountName'))]",
-    "questionsAppInsightsName": "[concat(parameters('appName'), uniqueString(resourceGroup().id),'-ai')]",
-    "cosmosDatabaseAccount": "[toLower(concat(parameters('appName'),'cosmos', uniqueString(resourceGroup().id)))]",
+    "questionsAppInsightsName": "[concat(parameters('appName'),'-ai')]",
+    "cosmosDatabaseAccount": "[toLower(concat(parameters('appName'),'cosmos'))]",
     "consistencyPolicy": {
       "Eventual": {
         "defaultConsistencyLevel": "Eventual"
