@@ -311,20 +311,20 @@
               "value": "[concat('AccountEndpoint=',reference(concat('Microsoft.DocumentDb/databaseAccounts/',variables('cosmosDatabaseAccount'))).documentEndpoint,';AccountKey=',listKeys(resourceId('Microsoft.DocumentDb/databaseAccounts', variables('cosmosDatabaseAccount')), '2015-04-08').primaryMasterKey,';')]"
             },
             {
-              "name": "COSMOSDB_DATABASE_URL",
+              "name": "COSMOS_DB_DATABASE_URL",
               "value": "[reference(concat('Microsoft.DocumentDb/databaseAccounts/',variables('cosmosDatabaseAccount'))).documentEndpoint]"
             },
             {
-              "name": "COSMOSDB_DATABASE_KEY",
+              "name": "COSMOS_DB_DATABASE_KEY",
               "value": "[listKeys(resourceId('Microsoft.DocumentDb/databaseAccounts', variables('cosmosDatabaseAccount')), '2015-04-08').primaryMasterKey]"
             },
             {
-              "name": "CosmosDBEndpoint",
-              "value": "[reference(concat('Microsoft.DocumentDb/databaseAccounts/',variables('cosmosDatabaseAccount'))).documentEndpoint]"
+              "name": "Settings:CosmosDbDatabaseName",
+              "value": "[parameters('cosmosDatabaseName')]"
             },
             {
-              "name": "CosmosDBKey",
-              "value": "[listKeys(resourceId('Microsoft.DocumentDb/databaseAccounts', variables('cosmosDatabaseAccount')), '2015-04-08').primaryMasterKey]"
+              "name": "Settings:CosmosDbContainerName",
+              "value": "[parameters('cosmosDatabaseCollection')]"
             },
             {
               "name": "COSMOSDB_DATABASE_NAME",
