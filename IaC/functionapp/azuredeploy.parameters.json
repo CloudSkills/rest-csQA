@@ -5,6 +5,15 @@
     "appName": {
       "value": "csQA"
     },
+    "apimName": {
+      "value": "csQA"
+    },
+    "publisherEmail": {
+      "value": "pieter.geutjens@outlook.com"
+    },
+    "publisherName": {
+      "value": "CloudSkills"
+    },
     "storageAccountType": {
       "value": "Standard_LRS"
     },

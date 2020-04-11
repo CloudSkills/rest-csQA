@@ -2,56 +2,38 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "apis_csqa_questions_path": {
-            "type": "SecureString"
-        },
-        "operations_delete_deletequestion_type": {
-            "type": "SecureString"
-        },
-        "operations_get_getquestionbyid_type": {
-            "type": "SecureString"
-        },
-        "operations_put_updatequestion_type": {
-            "type": "SecureString"
-        },
-        "apim_name": {
+        "apimName": {
             "defaultValue": "csQA",
             "type": "String"
         },
-        "function_app_name": {
-            "defaultValue": "csQAzrirpiggjdc4w-questions",
-            "type": "String"
-        },
-        "publisher_email": {
+        "publisherEmail": {
             "defaultValue": "pieter.geutjens@outlook.com",
             "type": "String"
         },
-        "publisher_name": {
+        "publisherName": {
             "defaultValue": "CloudSkills",
             "type": "String"
         }
     },
-    "variables": {
-        "function_app_url": "[concat('https://',parameters('function_app_name'), '.azurewebsites.net/api')]"
-    },
+    "variables": {},
     "resources": [
         {
             "type": "Microsoft.ApiManagement/service",
             "apiVersion": "2019-12-01-preview",
-            "name": "[parameters('apim_name')]",
+            "name": "[parameters('apimName')]",
             "location": "West Europe",
             "sku": {
                 "name": "Developer",
                 "capacity": 1
             },
             "properties": {
-                "publisherEmail": "[parameters('publisher_email')]",
-                "publisherName": "[parameters('publisher_name')]",
+                "publisherEmail": "[parameters('publisherEmail')]",
+                "publisherName": "[parameters('publisherName')]",
                 "notificationSenderEmail": "apimgmt-noreply@mail.windowsazure.com",
                 "hostnameConfigurations": [
                     {
                         "type": "Proxy",
-                        "hostName": "[concat(toLower(parameters('apim_name')), '.azure-api.net')]",
+                        "hostName": "[concat(toLower(parameters('apimName')), '.azure-api.net')]",
                         "negotiateClientCertificate": false,
                         "defaultSslBinding": true
                     }
@@ -70,242 +52,12 @@
                 "disableGateway": false,
                 "apiVersionConstraint": {}
             }
-        },
-        {
-            "type": "Microsoft.ApiManagement/service/apis",
-            "apiVersion": "2019-12-01-preview",
-            "name": "[concat(parameters('apim_name'), '/', parameters('apim_name'), '-questions')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service', parameters('apim_name'))]"
-            ],
-            "properties": {
-                "displayName": "[concat(parameters('apim_name'), '-questions')]",
-                "apiRevision": "1",
-                "description": "Import from Function App",
-                "subscriptionRequired": false,
-                "protocols": [
-                    "https"
-                ],
-                "isCurrent": true,
-                "path": ""
-            }
-        },
-        {
-            "type": "Microsoft.ApiManagement/service/backends",
-            "apiVersion": "2019-12-01-preview",
-            "name": "[concat(parameters('apim_name'), '/', parameters('apim_name'), 'zrirpiggjdc4w-questions')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service', parameters('apim_name'))]"
-            ],
-            "properties": {
-                "description": "[parameters('function_app_name')]",
-                "url": "[variables('function_app_url')]",
-                "protocol": "http",
-                "resourceId": "https://management.azure.com/subscriptions/c0916c23-1eeb-4623-a719-4ec0343d791c/resourceGroups/csQA/providers/Microsoft.Web/sites/csQAzrirpiggjdc4w-questions",
-                "credentials": {
-                    "header": {
-                        "x-functions-key": [
-                            "{{csqazrirpiggjdc4w-questions-key}}"
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.ApiManagement/service/namedValues",
-            "apiVersion": "2019-12-01-preview",
-            "name": "[concat(parameters('apim_name'), '/', parameters('apim_name'), 'zrirpiggjdc4w-questions-key')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service', parameters('apim_name'))]"
-            ],
-            "properties": {
-                "displayName": "csqazrirpiggjdc4w-questions-key",
-                "tags": [
-                    "key",
-                    "function",
-                    "auto"
-                ],
-                "secret": true,
-                "value": "[parameters('namedValues_csqazrirpiggjdc4w_questions_key_value')]"
-            }
-        },
-        {
-            "type": "Microsoft.ApiManagement/service/products",
-            "apiVersion": "2019-12-01-preview",
-            "name": "[concat(parameters('apim_name'), '/starter')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service', parameters('apim_name'))]"
-            ],
-            "properties": {
-                "displayName": "Starter",
-                "description": "Subscribers will be able to run 5 calls/minute up to a maximum of 100 calls/week.",
-                "subscriptionRequired": true,
-                "approvalRequired": false,
-                "subscriptionsLimit": 1,
-                "state": "published"
-            }
-        },
-        {
-            "type": "Microsoft.ApiManagement/service/products",
-            "apiVersion": "2019-12-01-preview",
-            "name": "[concat(parameters('apim_name'), '/unlimited')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service', parameters('apim_name'))]"
-            ],
-            "properties": {
-                "displayName": "Unlimited",
-                "description": "Subscribers have completely unlimited access to the API. Administrator approval is required.",
-                "subscriptionRequired": true,
-                "approvalRequired": true,
-                "subscriptionsLimit": 1,
-                "state": "published"
-            }
-        },
-        {
-            "type": "Microsoft.ApiManagement/service/properties",
-            "apiVersion": "2019-01-01",
-            "name": "[concat(parameters('apim_name'), '/5e8fff4c05f039116ca50d66')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service', parameters('apim_name'))]"
-            ],
-            "properties": {
-                "displayName": "Logger-Credentials-5e8fff4c05f039116ca50d67",
-                "value": "723ca9b2-c9d9-45a5-864d-5bfeda9aaeaa",
-                "secret": true
-            }
-        },
-        {
-            "type": "Microsoft.ApiManagement/service/properties",
-            "apiVersion": "2019-01-01",
-            "name": "[concat(parameters('apim_name'), '/', parameters('apim_name'), 'zrirpiggjdc4w-questions-key')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service', parameters('apim_name'))]"
-            ],
-            "properties": {
-                "displayName": "csqazrirpiggjdc4w-questions-key",
-                "value": "hLjLDClRB1HVTBmcsGBaJwyYPFjyqX3xlXSenyZ0YeLc50EOkaHqag==",
-                "tags": [
-                    "key",
-                    "function",
-                    "auto"
-                ],
-                "secret": true
-            }
-        },
-        {
-            "type": "Microsoft.ApiManagement/service/subscriptions",
-            "apiVersion": "2019-12-01-preview",
-            "name": "[concat(parameters('apim_name'), '/master')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service', parameters('apim_name'))]"
-            ],
-            "properties": {
-                "scope": "[concat(resourceId('Microsoft.ApiManagement/service', parameters('apim_name')), '/')]",
-                "displayName": "Built-in all-access subscription",
-                "state": "active",
-                "allowTracing": true
-            }
-        },
-        {
-            "type": "Microsoft.ApiManagement/service/apis/operations",
-            "apiVersion": "2019-12-01-preview",
-            "name": "[concat(parameters('apim_name'), '/', parameters('apim_name'), '-questions/delete-deletequestion')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('apim_name'), concat(parameters('apim_name'), '-questions'))]",
-                "[resourceId('Microsoft.ApiManagement/service', parameters('apim_name'))]"
-            ],
-            "properties": {
-                "displayName": "DeleteQuestion",
-                "method": "DELETE",
-                "urlTemplate": "/questions/{questionId}",
-                "templateParameters": [
-                    {
-                        "name": "questionId",
-                        "required": true,
-                        "values": [],
-                        "type": "[parameters('operations_delete_deletequestion_type')]"
-                    }
-                ],
-                "responses": []
-            }
-        },
-        {
-            "type": "Microsoft.ApiManagement/service/apis/operations",
-            "apiVersion": "2019-12-01-preview",
-            "name": "[concat(parameters('apim_name'), '/', parameters('apim_name'), '-questions/get-getquestionbyid')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('apim_name'), concat(parameters('apim_name'), '-questions'))]",
-                "[resourceId('Microsoft.ApiManagement/service', parameters('apim_name'))]"
-            ],
-            "properties": {
-                "displayName": "GetQuestionById",
-                "method": "GET",
-                "urlTemplate": "/questions/{questionId}",
-                "templateParameters": [
-                    {
-                        "name": "questionId",
-                        "required": true,
-                        "values": [],
-                        "type": "[parameters('operations_get_getquestionbyid_type')]"
-                    }
-                ],
-                "responses": []
-            }
-        },
-        {
-            "type": "Microsoft.ApiManagement/service/apis/operations",
-            "apiVersion": "2019-12-01-preview",
-            "name": "[concat(parameters('apim_name'), '/', parameters('apim_name'), '-questions/get-getquestions')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('apim_name'), concat(parameters('apim_name'), '-questions'))]",
-                "[resourceId('Microsoft.ApiManagement/service', parameters('apim_name'))]"
-            ],
-            "properties": {
-                "displayName": "GetQuestions",
-                "method": "GET",
-                "urlTemplate": "/questions",
-                "templateParameters": [],
-                "responses": []
-            }
-        },
-        {
-            "type": "Microsoft.ApiManagement/service/apis/operations",
-            "apiVersion": "2019-12-01-preview",
-            "name": "[concat(parameters('apim_name'), '/', parameters('apim_name'), '-questions/post-createquestion')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('apim_name'), concat(parameters('apim_name'), '-questions'))]",
-                "[resourceId('Microsoft.ApiManagement/service', parameters('apim_name'))]"
-            ],
-            "properties": {
-                "displayName": "CreateQuestion",
-                "method": "POST",
-                "urlTemplate": "/questions",
-                "templateParameters": [],
-                "responses": []
-            }
-        },
-        {
-            "type": "Microsoft.ApiManagement/service/apis/operations",
-            "apiVersion": "2019-12-01-preview",
-            "name": "[concat(parameters('apim_name'), '/', parameters('apim_name'), '-questions/put-updatequestion')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('apim_name'), concat(parameters('apim_name'), '-questions'))]",
-                "[resourceId('Microsoft.ApiManagement/service', parameters('apim_name'))]"
-            ],
-            "properties": {
-                "displayName": "UpdateQuestion",
-                "method": "PUT",
-                "urlTemplate": "/questions/{questionId}",
-                "templateParameters": [
-                    {
-                        "name": "questionId",
-                        "required": true,
-                        "values": [],
-                        "type": "[parameters('operations_put_updatequestion_type')]"
-                    }
-                ],
-                "responses": []
-            }
         }
-    ]
+    ],
+    "outputs": {
+        "apim_instance_name": {
+            "type": "string",
+            "value": "[parameters('apimName')]"
+        }
+    }
 }
