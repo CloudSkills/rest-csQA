@@ -341,7 +341,7 @@
     {
       "type": "Microsoft.ApiManagement/service",
       "apiVersion": "2019-12-01-preview",
-      "name": "[parameters('apim_name')]",
+      "name": "[parameters('apimName')]",
       "location": "West Europe",
       "sku": {
         "name": "Developer",
