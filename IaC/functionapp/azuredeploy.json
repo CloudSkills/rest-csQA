@@ -115,7 +115,7 @@
     }
   },
   "variables": {
-    "questionsStorageAccountName": "[toLower(concat(parameters('appName'),'-st'))]",
+    "questionsStorageAccountName": "[toLower(concat(parameters('appName'),'storage'))]",
     "hostingPlanName": "[parameters('appName')]",
     "questionsFunctionAppName": "[concat(parameters('appName'),'-questions')]",
     "questionsStorageAccountId": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('questionsStorageAccountName'))]",
