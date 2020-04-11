@@ -101,15 +101,15 @@
         "description": "Enable automatic failover for regions. Ignored when Multi-Master is enabled"
       }
     },
-    "apim_name": {
+    "apimName": {
       "defaultValue": "csQA",
       "type": "String"
     },
-    "publisher_email": {
+    "publisherEmail": {
       "defaultValue": "pieter.geutjens@outlook.com",
       "type": "String"
     },
-    "publisher_name": {
+    "publisherName": {
       "defaultValue": "CloudSkills",
       "type": "String"
     }
@@ -348,13 +348,13 @@
         "capacity": 1
       },
       "properties": {
-        "publisherEmail": "[parameters('publisher_email')]",
-        "publisherName": "[parameters('publisher_name')]",
+        "publisherEmail": "[parameters('publisherEmail')]",
+        "publisherName": "[parameters('publisherName')]",
         "notificationSenderEmail": "apimgmt-noreply@mail.windowsazure.com",
         "hostnameConfigurations": [
           {
             "type": "Proxy",
-            "hostName": "[concat(toLower(parameters('apim_name')), '.azure-api.net')]",
+            "hostName": "[concat(toLower(parameters('apimName')), '.azure-api.net')]",
             "negotiateClientCertificate": false,
             "defaultSslBinding": true
           }
@@ -387,7 +387,7 @@
     },
     "apimInstanceName": {
       "type": "string",
-      "value": "[parameters('apim_name')]"
+      "value": "[parameters('apimName')]"
     }
   }
 }
