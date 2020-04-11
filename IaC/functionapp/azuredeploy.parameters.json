@@ -24,7 +24,7 @@
       "value": "questions"
     },
     "cosmosCollectionPartitionKey": {
-      "value": "/id"
+      "value": "/partitionKey"
     },
     "cosmosDatabaseSharedThroughput": {
       "value": 400
