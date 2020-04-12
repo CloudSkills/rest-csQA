@@ -25,23 +25,17 @@ stages:
       vmImage: $(vmImageName)
 
     steps:
-    - task: AzureResourceGroupDeployment@2
-      displayName: 'Azure Deployment:Create Or Update Resource Group action on $(resourceGroupName)'
+    - task: DotNetCoreCLI@2
+      displayName: 'Build project'
       inputs:
-        azureSubscription: '$(azureSubscription)'
-        resourceGroupName: '$(resourceGroupName)'
-        location: '$(resourceGroupLocation)'
-        csmFile: '$(System.DefaultWorkingDirectory)/_csQA-Azure Functions for .NET-CI/arm/azuredeploy.json'
-        csmParametersFile: '$(System.DefaultWorkingDirectory)/_csQA-Azure Functions for .NET-CI/arm/azuredeploy.parameters.json'
-        deploymentName: 'csQA-ARM'
-        deploymentOutputs: deploymentOutputs
-    - task: PowerShell@2
-      displayName: 'Parse ARM Deployment outputs'
+        projects: '**/*.csproj'
+        arguments: '--output publish_output --configuration Release'
+    - task: ArchiveFiles@2
+      displayName: 'Archive AzureFunction Files'
       inputs:
-        targetType: filePath
-        filePath: './$(System.DefaultWorkingDirectory)/_csQA-Azure Functions for .NET-CI/scripts/parse_arm_deployment_output.ps1'
-        arguments: '-ArmOutputString ''$(deploymentOutputs)'' -ErrorAction Stop'
-
+        rootFolderOrFile: 'publish_output/'
+        includeRootFolder: false
+        archiveFile: '$(Build.ArtifactStagingDirectory)/src/$(Build.BuildId).zip'
     - task: CopyFiles@2
       displayName: 'Copy Files to: ARM'
       inputs:
@@ -49,7 +43,6 @@ stages:
         Contents: '*.json'
         TargetFolder: '$(build.artifactstagingdirectory)/arm'
         CleanTargetFolder: true
-
     - task: CopyFiles@2
       displayName: 'Copy Files to: Scripts'
       inputs:
