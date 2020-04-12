@@ -28,7 +28,7 @@ stages:
     - task: AzureResourceGroupDeployment@2
       displayName: 'Azure Deployment:Create Or Update Resource Group action on $(resourceGroupName)'
       inputs:
-        azureSubscription: $(azureSubscription)'
+        azureSubscription: '$(azureSubscription)'
         resourceGroupName: '$(resourceGroupName)'
         location: '$(resourceGroupLocation)'
         csmFile: '$(System.DefaultWorkingDirectory)/_csQA-Azure Functions for .NET-CI/arm/azuredeploy.json'
@@ -95,7 +95,7 @@ stages:
           - task: AzureResourceGroupDeployment@2
             displayName: 'Azure Deployment on $(resourceGroupName)'
             inputs:
-              azureSubscription: 'Visual Studio Professional (c0916c23-1eeb-4623-a719-4ec0343d791c)'
+              azureSubscription: '$(azureSubscription)'
               resourceGroupName: '$(resourceGroupName)'
               location: '$(resourceGroupLocation)'
               csmFile: '$(Build.ArtifactStagingDirectory)/arm/azuredeploy.json'
