@@ -36,6 +36,5 @@ $armOutputObj.PSObject.Properties | ForEach-Object {
 
   $attribString = $vsoAttribs -join ';'
   $var = "##vso[$attribString]$value"
-  Write-Warning "writing #vso[$attribString]$value"
   Write-Output -InputObject $var
 }
