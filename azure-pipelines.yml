@@ -101,10 +101,11 @@ stages:
               azureSubscription: '$(azureSubscription)'
               resourceGroupName: '$(resourceGroupName)'
               location: '$(resourceGroupLocation)'
-              csmFile: '$(System.DefaultWorkingDirectory)/**/arm/azuredeploy.json'
-              csmParametersFile: '$(System.DefaultWorkingDirectory)/**/arm/azuredeploy.parameters.json'
+              csmFile: '$(Pipeline.Workspace)/arm/azuredeploy.json'
+              csmParametersFile: '$(Pipeline.Workspace)/arm/azuredeploy.parameters.json'
               deploymentName: 'csQA-ARM'
               deploymentOutputs: deploymentOutputs
+            enabled: false
           - task: PowerShell@2
             displayName: 'Parse ARM Deployment outputs'
             inputs:
