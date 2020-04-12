@@ -95,6 +95,7 @@ stages:
               script: |
                 echo System.DefaultWorkingDirectory
                 ls $(System.DefaultWorkingDirectory)
+                cat $(Pipeline.Workspace)/arm/azuredeploy.json
           - task: AzureResourceGroupDeployment@2
             displayName: 'Azure Deployment on $(resourceGroupName)'
             inputs:
@@ -105,7 +106,6 @@ stages:
               csmParametersFile: '$(Pipeline.Workspace)/arm/azuredeploy.parameters.json'
               deploymentName: 'csQA-ARM'
               deploymentOutputs: deploymentOutputs
-            enabled: false
           - task: PowerShell@2
             displayName: 'Parse ARM Deployment outputs'
             inputs:
