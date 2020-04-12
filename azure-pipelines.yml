@@ -95,7 +95,7 @@ stages:
           - task: AzureResourceGroupDeployment@2
             displayName: 'Azure Deployment on $(resourceGroupName)'
             inputs:
-              azureSubscription: '$(azureSubscription)'
+              azureSubscription: 'Visual Studio Professional (c0916c23-1eeb-4623-a719-4ec0343d791c)'
               resourceGroupName: '$(resourceGroupName)'
               location: '$(resourceGroupLocation)'
               csmFile: '$(Build.ArtifactStagingDirectory)/arm/azuredeploy.json'
