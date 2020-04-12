@@ -100,18 +100,6 @@
       "metadata": {
         "description": "Enable automatic failover for regions. Ignored when Multi-Master is enabled"
       }
-    },
-    "apimName": {
-      "defaultValue": "csQA",
-      "type": "String"
-    },
-    "publisherEmail": {
-      "defaultValue": "pieter.geutjens@outlook.com",
-      "type": "String"
-    },
-    "publisherName": {
-      "defaultValue": "CloudSkills",
-      "type": "String"
     }
   },
   "variables": {
@@ -337,21 +325,6 @@
           ]
         }
       }
-    },
-    {
-      "type": "Microsoft.ApiManagement/service",
-      "apiVersion": "2019-12-01-preview",
-      "name": "[parameters('apimName')]",
-      "location": "West Europe",
-      "sku": {
-        "name": "Consumption",
-        "capacity": 0
-      },
-      "properties": {
-        "publisherEmail": "[parameters('publisherEmail')]",
-        "publisherName": "[parameters('publisherName')]",
-        "notificationSenderEmail": "apimgmt-noreply@mail.windowsazure.com"
-      }
     }
   ],
   "outputs": {
@@ -362,10 +335,6 @@
     "questionsFunctionAppName": {
       "type": "string",
       "value": "[variables('questionsFunctionAppName')]"
-    },
-    "apimInstanceName": {
-      "type": "string",
-      "value": "[parameters('apimName')]"
     }
   }
 }
