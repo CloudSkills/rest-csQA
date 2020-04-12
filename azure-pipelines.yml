@@ -88,31 +88,23 @@ stages:
           - task: CmdLine@2
             inputs:
               script: |
-                echo Pipeline.Workspace
-                ls $(Pipeline.Workspace)
-          - task: CmdLine@2
-            inputs:
-              script: |
-                echo Build.ArtifactStagingDirectory
-                ls $(Build.ArtifactStagingDirectory)
-          - task: CmdLine@2
-            inputs:
-              script: 'ls $(Pipeline.Workspace)'
+                echo Pipeline.Workspace.arm
+                ls $(Pipeline.Workspace)/arm
           - task: AzureResourceGroupDeployment@2
             displayName: 'Azure Deployment on $(resourceGroupName)'
             inputs:
               azureSubscription: '$(azureSubscription)'
               resourceGroupName: '$(resourceGroupName)'
               location: '$(resourceGroupLocation)'
-              csmFile: '$(Pipeline.Workspace)/drop/arm/azuredeploy.json'
-              csmParametersFile: $(Pipeline.Workspace)/drop/arm/azuredeploy.parameters.json'
+              csmFile: '$(Pipeline.Workspace)/arm/azuredeploy.json'
+              csmParametersFile: $(Pipeline.Workspace)/arm/azuredeploy.parameters.json'
               deploymentName: 'csQA-ARM'
               deploymentOutputs: deploymentOutputs
           - task: PowerShell@2
             displayName: 'Parse ARM Deployment outputs'
             inputs:
               targetType: filePath
-              filePath: '$(Pipeline.Workspace)/drop/scripts/parse_arm_deployment_output.ps1'
+              filePath: '$(Pipeline.Workspace)/scripts/parse_arm_deployment_output.ps1'
               arguments: '-ArmOutputString ''$(deploymentOutputs)'' -ErrorAction Stop'
           - task: AzureFunctionApp@1
             displayName: 'Azure Function App Deploy: $(questionsFunctionAppName)'
@@ -120,5 +112,5 @@ stages:
               azureSubscription: '$(azureSubscription)'
               appType: functionApp
               appName: '$(questionsFunctionAppName)'
-              package: '$(Pipeline.Workspace)/drop/arm/**/*.zip'
+              package: '$(Pipeline.Workspace)/src/**/*.zip'
               deploymentMethod: zipDeploy
