@@ -3,13 +3,13 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "appName": {
-      "value": "csQA"
+      "value": "<UNIQUE APP NAME>"
     },
     "storageAccountType": {
       "value": "Standard_LRS"
     },
     "cosmosDatabaseName": {
-      "value": "csQA"
+      "value": "<UNIQUE COSMOS DB INSTANCE NAME>"
     },
     "cosmosDatabaseCollection": {
       "value": "questions"
