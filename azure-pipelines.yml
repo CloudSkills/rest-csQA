@@ -7,17 +7,12 @@ trigger:
 - master
 
 variables:
-  # Azure Resource Manager connection created during pipeline creation
-  azureSubscription: '00e6695b-6f5f-435e-a12c-a26e4185bc3c'
-
-  # Function app name
-  functionAppName: 'csQA-questions'
-
-  # Agent VM image name
   vmImageName: 'vs2017-win2016'
-
-  # Working Directory
-  workingDirectory: '$(System.DefaultWorkingDirectory)/AzureFunctions/csQA'
+  azureSubscription: 'c0916c23-1eeb-4623-a719-4ec0343d791c'
+  resourceGroupName: 'csQADevOps'
+  resourceGroupLocation: 'West Europe'
+  apiManagementName: 'csDevOps'
+  questionsFunctionAppName: ''
 
 stages:
 - stage: Build
@@ -30,25 +25,55 @@ stages:
       vmImage: $(vmImageName)
 
     steps:
-    - task: DotNetCoreCLI@2
-      displayName: Build
+    - task: AzureResourceGroupDeployment@2
+      displayName: 'Azure Deployment:Create Or Update Resource Group action on $(resourceGroupName)'
       inputs:
-        command: 'build'
-        projects: |
-          $(workingDirectory)/*.csproj
-        arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
-
-    - task: ArchiveFiles@2
-      displayName: 'Archive files'
+        azureSubscription: $(azureSubscription)'
+        resourceGroupName: '$(resourceGroupName)'
+        location: '$(resourceGroupLocation)'
+        csmFile: '$(System.DefaultWorkingDirectory)/_csQA-Azure Functions for .NET-CI/arm/azuredeploy.json'
+        csmParametersFile: '$(System.DefaultWorkingDirectory)/_csQA-Azure Functions for .NET-CI/arm/azuredeploy.parameters.json'
+        deploymentName: 'csQA-ARM'
+        deploymentOutputs: deploymentOutputs
+    - task: PowerShell@2
+      displayName: 'Parse ARM Deployment outputs'
       inputs:
-        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/publish_output'
-        includeRootFolder: false
-        archiveType: zip
-        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-        replaceExistingArchive: true
+        targetType: filePath
+        filePath: './$(System.DefaultWorkingDirectory)/_csQA-Azure Functions for .NET-CI/scripts/parse_arm_deployment_output.ps1'
+        arguments: '-ArmOutputString ''$(deploymentOutputs)'' -ErrorAction Stop'
 
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-      artifact: drop
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: ARM'
+      inputs:
+        SourceFolder: IaC/functionapp
+        Contents: '*.json'
+        TargetFolder: '$(build.artifactstagingdirectory)/arm'
+        CleanTargetFolder: true
+
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: Scripts'
+      inputs:
+        SourceFolder: Scripts
+        Contents: '*.ps1'
+        TargetFolder: '$(build.artifactstagingdirectory)/scripts'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: src'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/src'
+        ArtifactName: src
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: arm'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/arm'
+        ArtifactName: arm
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: scripts'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/scripts'
+        ArtifactName: scripts
 
 - stage: Deploy
   displayName: Deploy stage
@@ -67,10 +92,27 @@ stages:
         deploy:
 
           steps:
+          - task: AzureResourceGroupDeployment@2
+            displayName: 'Azure Deployment on $(resourceGroupName)'
+            inputs:
+              azureSubscription: '$(azureSubscription)'
+              resourceGroupName: '$(resourceGroupName)'
+              location: '$(resourceGroupLocation)'
+              csmFile: '$(Build.ArtifactStagingDirectory)/arm/azuredeploy.json'
+              csmParametersFile: $(Build.ArtifactStagingDirectory)/arm/azuredeploy.parameters.json'
+              deploymentName: 'csQA-ARM'
+              deploymentOutputs: deploymentOutputs
+          - task: PowerShell@2
+            displayName: 'Parse ARM Deployment outputs'
+            inputs:
+              targetType: filePath
+              filePath: '$(Build.ArtifactStagingDirectory)/scripts/parse_arm_deployment_output.ps1'
+              arguments: '-ArmOutputString ''$(deploymentOutputs)'' -ErrorAction Stop'
           - task: AzureFunctionApp@1
-            displayName: 'Azure functions app deploy'
+            displayName: 'Azure Function App Deploy: $(questionsFunctionAppName)'
             inputs:
               azureSubscription: '$(azureSubscription)'
               appType: functionApp
-              appName: $(functionAppName)
-              package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+              appName: '$(questionsFunctionAppName)'
+              package: '$(Build.ArtifactStagingDirectory)/arm/**/*.zip'
+              deploymentMethod: zipDeploy
