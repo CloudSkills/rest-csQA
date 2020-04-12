@@ -90,14 +90,19 @@ stages:
               script: |
                 echo Pipeline.Workspace.arm
                 ls $(Pipeline.Workspace)/arm
+          - task: CmdLine@2
+            inputs:
+              script: |
+                echo System.DefaultWorkingDirectory
+                ls $(System.DefaultWorkingDirectory)
           - task: AzureResourceGroupDeployment@2
             displayName: 'Azure Deployment on $(resourceGroupName)'
             inputs:
               azureSubscription: '$(azureSubscription)'
               resourceGroupName: '$(resourceGroupName)'
               location: '$(resourceGroupLocation)'
-              csmFile: '$(Pipeline.Workspace)/arm/azuredeploy.json'
-              csmParametersFile: $(Pipeline.Workspace)/arm/azuredeploy.parameters.json'
+              csmFile: '$(System.DefaultWorkingDirectory)/**/arm/azuredeploy.json'
+              csmParametersFile: '$(System.DefaultWorkingDirectory)/**/arm/azuredeploy.parameters.json'
               deploymentName: 'csQA-ARM'
               deploymentOutputs: deploymentOutputs
           - task: PowerShell@2
