@@ -91,15 +91,15 @@ stages:
               azureSubscription: '$(azureSubscription)'
               resourceGroupName: '$(resourceGroupName)'
               location: '$(resourceGroupLocation)'
-              csmFile: '$(Build.ArtifactStagingDirectory)/arm/azuredeploy.json'
-              csmParametersFile: $(Build.ArtifactStagingDirectory)/arm/azuredeploy.parameters.json'
+              csmFile: '$(Agent.BuildDirectory)/arm/azuredeploy.json'
+              csmParametersFile: $(Agent.BuildDirectory)/arm/azuredeploy.parameters.json'
               deploymentName: 'csQA-ARM'
               deploymentOutputs: deploymentOutputs
           - task: PowerShell@2
             displayName: 'Parse ARM Deployment outputs'
             inputs:
               targetType: filePath
-              filePath: '$(Build.ArtifactStagingDirectory)/scripts/parse_arm_deployment_output.ps1'
+              filePath: '$(Agent.BuildDirectory)/scripts/parse_arm_deployment_output.ps1'
               arguments: '-ArmOutputString ''$(deploymentOutputs)'' -ErrorAction Stop'
           - task: AzureFunctionApp@1
             displayName: 'Azure Function App Deploy: $(questionsFunctionAppName)'
