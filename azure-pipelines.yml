@@ -8,7 +8,7 @@ trigger:
 
 variables:
   vmImageName: 'vs2017-win2016'
-  azureSubscription: 'c0916c23-1eeb-4623-a719-4ec0343d791c'
+  azureSubscription: 'Visual Studio Professional (c0916c23-1eeb-4623-a719-4ec0343d791c)'
   resourceGroupName: 'csQADevOps'
   resourceGroupLocation: 'West Europe'
   apiManagementName: 'csDevOps'
