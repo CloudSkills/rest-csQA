@@ -85,6 +85,19 @@ stages:
         deploy:
 
           steps:
+          - task: CmdLine@2
+            inputs:
+              script: |
+                echo Pipeline.Workspace
+                ls $(Pipeline.Workspace)
+          - task: CmdLine@2
+            inputs:
+              script: |
+                echo Build.ArtifactStagingDirectory
+                ls $(Build.ArtifactStagingDirectory)
+          - task: CmdLine@2
+            inputs:
+              script: 'ls $(Pipeline.Workspace)'
           - task: AzureResourceGroupDeployment@2
             displayName: 'Azure Deployment on $(resourceGroupName)'
             inputs:
