@@ -33,13 +33,13 @@ namespace csQA
                 string endpoint = configuration["COSMOS_DB_DATABASE_URL"];
                 if (string.IsNullOrEmpty(endpoint))
                 {
-                    throw new ArgumentNullException("Please specify a valid endpoint in the appSettings.json file or your Azure Functions Settings.");
+                    throw new ArgumentNullException("Please specify a valid endpoint in the local.settings.json file or your Azure Functions Settings.");
                 }
 
                 string authKey = configuration["COSMOS_DB_DATABASE_KEY"];
                 if (string.IsNullOrEmpty(authKey) || string.Equals(authKey, "Super secret key"))
                 {
-                    throw new ArgumentException("Please specify a valid AuthorizationKey in the appSettings.json file or your Azure Functions Settings.");
+                    throw new ArgumentException("Please specify a valid AuthorizationKey in the local.settings.json file or your Azure Functions Settings.");
                 }
 
                 CosmosClientBuilder configurationBuilder = new CosmosClientBuilder(endpoint, authKey);
